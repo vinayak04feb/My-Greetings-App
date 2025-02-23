@@ -5,6 +5,7 @@ import com.example.greetingapp.service.GreetingService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -32,5 +33,12 @@ public class GreetingController {
         Optional<Greeting> greeting = greetingService.findGreetingById(id);
         return greeting.map(value -> ResponseEntity.ok("{\"id\": " + value.getId() + ", \"message\": \"" + value.getMessage() + "\"}"))
                 .orElseGet(() -> ResponseEntity.status(404).body("{\"error\": \"Greeting not found\"}"));
+    }
+
+    // GET method to list all greetings
+    @GetMapping("/all")
+    public ResponseEntity<List<Greeting>> getAllGreetings() {
+        List<Greeting> greetings = greetingService.getAllGreetings();
+        return ResponseEntity.ok(greetings);
     }
 }

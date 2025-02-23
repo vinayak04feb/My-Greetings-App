@@ -35,17 +35,14 @@ public class GreetingService {
         return message;
     }
 
-    // Find greeting message by ID
     public Optional<Greeting> findGreetingById(Long id) {
         return greetingRepository.findById(id);
     }
 
-    // List all greeting messages
     public List<Greeting> getAllGreetings() {
         return greetingRepository.findAll();
     }
 
-    // Update greeting message by ID
     public Optional<Greeting> updateGreeting(Long id, String newMessage) {
         Optional<Greeting> greetingOptional = greetingRepository.findById(id);
         if (greetingOptional.isPresent()) {
@@ -55,5 +52,14 @@ public class GreetingService {
             return Optional.of(greeting);
         }
         return Optional.empty();
+    }
+
+    // Delete greeting message by ID
+    public boolean deleteGreeting(Long id) {
+        if (greetingRepository.existsById(id)) {
+            greetingRepository.deleteById(id);
+            return true;
+        }
+        return false;
     }
 }

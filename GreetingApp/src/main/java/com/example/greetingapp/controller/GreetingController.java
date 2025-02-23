@@ -39,11 +39,21 @@ public class GreetingController {
         return ResponseEntity.ok(greetings);
     }
 
-    // PUT method to update a greeting by ID
     @PutMapping("/{id}")
     public ResponseEntity<String> updateGreeting(@PathVariable Long id, @RequestBody String newMessage) {
         Optional<Greeting> updatedGreeting = greetingService.updateGreeting(id, newMessage);
         return updatedGreeting.map(value -> ResponseEntity.ok("{\"id\": " + value.getId() + ", \"message\": \"" + value.getMessage() + "\"}"))
                 .orElseGet(() -> ResponseEntity.status(404).body("{\"error\": \"Greeting not found or could not be updated\"}"));
+    }
+
+    // DELETE method to remove a greeting by ID
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteGreeting(@PathVariable Long id) {
+        boolean isDeleted = greetingService.deleteGreeting(id);
+        if (isDeleted) {
+            return ResponseEntity.ok("{\"message\": \"Greeting deleted successfully\"}");
+        } else {
+            return ResponseEntity.status(404).body("{\"error\": \"Greeting not found or could not be deleted\"}");
+        }
     }
 }

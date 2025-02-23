@@ -29,7 +29,6 @@ public class GreetingService {
             message = "Hello World";
         }
 
-        // Save the message in the repository
         Greeting greeting = new Greeting(message);
         greetingRepository.save(greeting);
 
@@ -44,5 +43,17 @@ public class GreetingService {
     // List all greeting messages
     public List<Greeting> getAllGreetings() {
         return greetingRepository.findAll();
+    }
+
+    // Update greeting message by ID
+    public Optional<Greeting> updateGreeting(Long id, String newMessage) {
+        Optional<Greeting> greetingOptional = greetingRepository.findById(id);
+        if (greetingOptional.isPresent()) {
+            Greeting greeting = greetingOptional.get();
+            greeting.setMessage(newMessage);
+            greetingRepository.save(greeting);
+            return Optional.of(greeting);
+        }
+        return Optional.empty();
     }
 }

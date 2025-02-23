@@ -18,7 +18,6 @@ public class GreetingController {
         this.greetingService = greetingService;
     }
 
-    // GET method with optional query parameters
     @GetMapping
     public ResponseEntity<String> getGreeting(
             @RequestParam(required = false) String firstName,
@@ -27,7 +26,6 @@ public class GreetingController {
         return ResponseEntity.ok("{\"message\": \"" + message + "\"}");
     }
 
-    // GET method to fetch a greeting by ID
     @GetMapping("/{id}")
     public ResponseEntity<String> getGreetingById(@PathVariable Long id) {
         Optional<Greeting> greeting = greetingService.findGreetingById(id);
@@ -35,10 +33,17 @@ public class GreetingController {
                 .orElseGet(() -> ResponseEntity.status(404).body("{\"error\": \"Greeting not found\"}"));
     }
 
-    // GET method to list all greetings
     @GetMapping("/all")
     public ResponseEntity<List<Greeting>> getAllGreetings() {
         List<Greeting> greetings = greetingService.getAllGreetings();
         return ResponseEntity.ok(greetings);
+    }
+
+    // PUT method to update a greeting by ID
+    @PutMapping("/{id}")
+    public ResponseEntity<String> updateGreeting(@PathVariable Long id, @RequestBody String newMessage) {
+        Optional<Greeting> updatedGreeting = greetingService.updateGreeting(id, newMessage);
+        return updatedGreeting.map(value -> ResponseEntity.ok("{\"id\": " + value.getId() + ", \"message\": \"" + value.getMessage() + "\"}"))
+                .orElseGet(() -> ResponseEntity.status(404).body("{\"error\": \"Greeting not found or could not be updated\"}"));
     }
 }
